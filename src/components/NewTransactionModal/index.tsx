@@ -5,6 +5,7 @@ import * as Dialog from '@radix-ui/react-dialog'
 import { ArrowCircleDown, ArrowCircleUp, X } from 'phosphor-react'
 
 import { Content, Overlay, CloseButton, TransactionType, TransactionTypeButton } from './styles'
+import { api } from '../../lib/axios'
 
 const newTransactionFormSchema = zod.object({
   description: zod.string(),
@@ -27,9 +28,15 @@ export function NewTransactionModal() {
   })
 
   async function handleCreateNewTransaction(data: zod.infer<typeof newTransactionFormSchema>) {
-    await new Promise(resolve => setTimeout(resolve, 2000))
+    const { description, category, price, type } = data;
 
-    console.log(data)
+    await api.post('transactions', {
+      description,
+      category,
+      price,
+      type,
+      createdAt: new Date(),
+    })
   }
 
   return (
